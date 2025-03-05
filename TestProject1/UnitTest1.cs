@@ -66,7 +66,7 @@ namespace TestProject1
 
         [Theory]
         [InlineData("- + 7 2 3")]
-        [InlineData("- 2 + 5 3")]
+        [InlineData("- 14 + 5 3")]
         public void GIVEN_three_positive_numbers_WHEN_operation_plus_RETURN_positive(string input)
         {
             //Arrange
@@ -82,7 +82,7 @@ namespace TestProject1
 
         [Theory]
         [InlineData("+ - 7 7 2")]
-        [InlineData("- 3 + 2 3")]
+        [InlineData("- 7 + 2 3")]
         public void GIVEN_three_positive_numbers_WHEN_operation_minus_RETURN_positive(string input)
         {
             //Arrange
