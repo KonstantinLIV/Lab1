@@ -103,3 +103,4 @@ C:\Users\epig2\Desktop\ЧГУ\8 семестр\Надёжность инф си�
 C:\Users\epig2\Desktop\ЧГУ\8 семестр\Надёжность инф систем З\1\ConsoleApp1\TestProject1\bin\Debug\net7.0\ConsoleApp1.exe
 C:\Users\epig2\Desktop\ЧГУ\8 семестр\Надёжность инф систем З\1\ConsoleApp1\TestProject1\bin\Debug\net7.0\ConsoleApp1.dll
 C:\Users\epig2\Desktop\ЧГУ\8 семестр\Надёжность инф систем З\1\ConsoleApp1\TestProject1\bin\Debug\net7.0\ConsoleApp1.pdb
+C:\Users\epig2\Desktop\ЧГУ\8 семестр\Надёжность инф систем З\1\ConsoleApp1\TestProject1\obj\Debug\net7.0\TestProject1.sourcelink.json
