@@ -16,7 +16,7 @@ namespace TestProject1
             actual = c.calculate(input);
 
             //Assert
-            Assert.Equal(expected, actual);  
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
@@ -119,6 +119,38 @@ namespace TestProject1
         {
             //Arrange
             int actual, expected = 0;
+            Calc c = new Calc();
+
+            // Act
+            actual = c.calculate(input);
+
+            //Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("- * / 15 - 7 + 1 1 3 + 2 + 1 1")]
+        [InlineData("+ 2 3")]
+        public void GIVEN_lots_of_positive_numbers_WHEN_operation_all_RETURN_positive(string input)
+        {
+            //Arrange
+            int actual, expected = 5;
+            Calc c = new Calc();
+
+            // Act
+            actual = c.calculate(input);
+
+            //Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData("+ + 3 1 ^ 2 2")]
+        [InlineData("^ 2 3")]
+        public void GIVEN_4_2_numbers_WHEN_operation_power_RETURN_positive(string input)
+        {
+            //Arrange
+            int actual, expected = 8;
             Calc c = new Calc();
 
             // Act
