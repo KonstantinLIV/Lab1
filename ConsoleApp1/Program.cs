@@ -1,73 +1,56 @@
-﻿public class Calc
+﻿
+public class mainClass
 {
     static void Main()
     {
         Calc calc = new Calc();
         Console.WriteLine(calc.calculate("- + 7 2 5")); //4
         Console.WriteLine(calc.calculate("- 1 + 2 3")); // -4
-        //Console.WriteLine(calc.calculate(" - * / 15 - 7 + 1 1 3 + 2 + 1 1")); //5
+        Console.WriteLine(calc.calculate("- * / 15 - 7 + 1 1 3 + 2 + 1 1")); //5
+        Console.WriteLine(calc.calculate("+ + 3 1 ^ 2 2")); //8
     }
+}
 
-    private string[] operators_const = { "+", "-", "*", "/" };
+interface ICalc
+{
+    void doOperation(ref Stack<int> operands, ref Stack<String> operators);
 
-    public int calculate2(string input)
+    int calculate(string input);
+}
+
+public class Calc : ICalc
+{
+    private string[] operators_const = { "+", "-", "*", "/", "^" };
+
+    public void doOperation(ref Stack<int> operands, ref Stack<String> operators)
     {
-        List<String> tokens = new List<String>(input.Split(' ')); 
-        Stack<int> stack = new Stack<int>();
-        bool waiting = false;
-        for (int i = 0; i<tokens.Count; i++) // tokens - операторы
+        int operand2 = operands.Pop();
+        int operand1 = operands.Pop();
+
+        switch (operators.Pop())
         {
-            if (int.TryParse(tokens[i], out int number))
-            {
-                // Если токен - число, помещаем его в стек
-                stack.Push(number);
-                tokens.RemoveAt(i--);
-
-                //"- 1 + 2 3"
-                if (stack.Count == 1)
-                    waiting = true;
-                if (stack.Count == 3)
-                    waiting = false;
-            }
-            if (stack.Count >= 2 && !waiting)
-            {
-                int operand2 = stack.Pop();
-                int operand1 = stack.Pop();
-
-                switch (tokens[i])
+            case "+":
+                operands.Push(operand1 + operand2);
+                break;
+            case "-":
+                operands.Push(operand1 - operand2);
+                break;
+            case "*":
+                operands.Push(operand1 * operand2);
+                break;
+            case "^":
+                operands.Push(Convert.ToInt32(Math.Pow(operand1, operand2)));
+                break;
+            case "/":
+                if (operand2 == 0)
                 {
-                    case "+":
-                        stack.Push(operand1 + operand2);
-                        tokens.RemoveAt(i--);
-                        break;
-                    case "-":
-                        stack.Push(operand1 - operand2);
-                        tokens.RemoveAt(i--);
-                        break;
-                    case "*":
-                        stack.Push(operand1 * operand2);
-                        tokens.RemoveAt(i--);
-                        break;
-                    case "/":
-                        if (operand2 == 0)
-                        {
-                            throw new DivideByZeroException("Деление на ноль");
-                        }
-                        stack.Push(operand1 / operand2);
-                        tokens.RemoveAt(i--);
-                        break;
-                    default:
-                        throw new ArgumentException("Неподдерживаемый оператор: " + tokens[i]);
+                    throw new DivideByZeroException("Деление на ноль");
                 }
-            }
+                operands.Push(operand1 / operand2);
+                break;
+            default:
+                throw new ArgumentException("Неподдерживаемый оператор: ");
         }
-
-        //if (stack.Count != 1)
-        //{
-        //    throw new ArgumentException("Некорректное выражение");
-        //}
-
-        return stack.Pop();
     }
 
     public int calculate(string input)
@@ -75,65 +58,39 @@
         List<String> tokens = new List<String>(input.Split(' '));
         Stack<String> operators = new Stack<string>();
         Stack<int> operands = new Stack<int>();
-        bool waiting = false;
+        bool count = false;
 
         int i = 0;
-        //for (int i = 0; i < tokens.Count; i++)
         do
         {
-            if (i< tokens.Count)
+            if (i < tokens.Count)
             {
+                if (operands.Count >= 2 && count)
+                {
+                    doOperation(ref operands, ref operators);
+                    continue;
+                }
                 if (int.TryParse(tokens[i], out int number))
                 {
                     // Если токен - число, помещаем его в стек
                     operands.Push(number);
+                    if (!operators_const.Contains(tokens[i - 1]))
+                        count = true;
+                    else
+                        count = false;
                 }
                 else if (operators_const.Contains(tokens[i]))
                 {
                     operators.Push(tokens[i]);
-
-                    if (operands.Count == 1)
-                        waiting = true;
+                    count = false;
                 }
             }
-            if (operands.Count >= 2 && !waiting)
+            if (count)
             {
-                int operand2 = operands.Pop();
-                int operand1 = operands.Pop();
-
-                switch (operators.Pop())
-                {
-                    case "+":
-                        operands.Push(operand1 + operand2);                   
-                        break;
-                    case "-":
-                        operands.Push(operand1 - operand2);
-                        break;
-                    case "*":
-                        operands.Push(operand1 * operand2);
-                        break;
-                    case "/":
-                        if (operand2 == 0)
-                        {
-                            throw new DivideByZeroException("Деление на ноль");
-                        }
-                        operands.Push(operand1 / operand2);
-                        break;
-                    default:
-                        throw new ArgumentException("Неподдерживаемый оператор: " + tokens[i]);
-                }
-            }
-            else if (operands.Count >= 2 && waiting)
-            {
-                waiting = false;   
+                doOperation(ref operands, ref operators);
             }
             i++;
-        } while (operators.Count >=1);
-
-        //if (stack.Count != 1)
-        //{
-        //    throw new ArgumentException("Некорректное выражение");
-        //}
+        } while (operators.Count >= 1);
 
         return operands.Pop();
     }
